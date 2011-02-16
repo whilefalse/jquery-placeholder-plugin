@@ -5,7 +5,8 @@
 				focusClass: 'placeholderFocus',
 				activeClass: 'placeholder',
 				overrideSupport: false,
-				preventRefreshIssues: true
+				preventRefreshIssues: true,
+				restoreOnBlur: true
 			},
 			debug : false,
 			log : function(msg){
@@ -94,7 +95,7 @@
                        .removeClass(opts.activeClass)
                        .addClass(opts.focusClass);
             });
-            $el.bind('blur.placeholder', function(){
+            $el.bind('placehold.placeholder', function(){
                 var $el = $(this);
 				
 				$el.removeClass(opts.focusClass);
@@ -103,8 +104,12 @@
                   $el.val($el.attr('placeholder'))
                      .addClass(opts.activeClass);
             });
+            $el.bind('blur.placeholder', function(){
+                if (opts.restoreOnBlur)
+                    $el.triggerHandler('placehold');
+            });
 
-            $el.triggerHandler('blur');
+            $el.triggerHandler('placehold');
 			
 			// Prevent incorrect form values being posted
 			$el.parents('form').submit(function(){
